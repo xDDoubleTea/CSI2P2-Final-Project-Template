@@ -1,0 +1,27 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/primitives/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/image/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/font/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/audio/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/acodec/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/ttf/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/color/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/memfile/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/physfs/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/native_dialog/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/video/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/addons/main/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/demos/cosmic_protector/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/demos/speed/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/demos/skater/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/demos/shooter/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/examples/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/tests/cmake_install.cmake",
+		"/home/susamogus/Desktop/Learning/3u/i2p2FinalProject/allegro-5.2.11.0/build/docs/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

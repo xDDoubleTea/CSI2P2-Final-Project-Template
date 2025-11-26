@@ -1,0 +1,2451 @@
+\input texinfo  @c -*-texinfo-*-
+@settitle Allegro changelog for 5.2.x series
+
+@documentencoding UTF-8
+
+@ifnottex
+@paragraphindent 0
+@end ifnottex
+@titlepage
+@title Allegro changelog for 5.2.x series
+@end titlepage
+
+@contents
+
+@node Top
+@top Allegro changelog for 5.2.x series
+
+These lists serve as summaries; the full histories are in the git
+repository.
+
+@menu
+* Changes from 52101 to 5211 November 2025::
+* Changes from 5210 to 52101 December 2024::
+* Changes from 5291 to 5210 November 2024::
+* Changes from 529 to 5291 January 2024::
+* Changes from 528 to 529 November 2023::
+* Changes from 527 to 528 June 2022::
+* Changes from 526 to 527 March 2021::
+* Changes from 525 to 526 February 2020::
+* Changes from 524 to 525 February 2019::
+* Changes from 523 to 524 February 2018::
+* Changes from 522 to 523 October 2017::
+* Changes from 5211 to 522 December 2016::
+* Changes from 521 to 5211 August 2016::
+* Changes from 520 to 521 July 2016::
+* Changes from 51131 to 520 April 2016::
+@end menu
+
+@node Changes from 52101 to 5211 November 2025
+@chapter Changes from 5.2.10.1 to 5.2.11 (November 2025)
+Core
+
+@itemize
+@item
+Remove tabs and trailing spaces from source files (SiegeLord)
+@item
+Disable DebugOutputString on windows for logs by default (#1548)
+(SiegeLord)
+@item
+Fixed initialization of the resize event thread when calling
+@code{al_init} after @code{al_uninstall_system} (Kevin Wellwood)
+@item
+Add ``gamepad'' support. This uses the community sourced SDL controller
+database. See ex_joystick_events for how to use this. (SiegeLord)
+@item
+Fix assorted issues with joystick hotplugging (SiegeLord)
+@item
+Add locks to avoid stale clipboard text (#1629) (Steve Fosdick)
+@item
+Reset the @code{GL_UNPACK_ROW_LENGTH} after unlocking certain bitmaps
+(SiegeLord, Alan_Roxdale)
+@end itemize
+
+MacOS
+
+@itemize
+@item
+Use a faster method of scrolling to the bottom for MacOS text logs
+(#1610) (SiegeLord)
+@item
+Fix static linking (SiegeLord)
+@item
+Fix @code{al_set_mouse_xy} on high resolution MacOS displays (SiegeLord)
+@item
+Add partial support for OpenGL 3 displays. Bitmap drawing works, but
+primitives addon does not (j-w-c-b)
+@item
+Fix Segfault with Japanese keyboards (John Wood)
+@item
+Remove the native MacOS image loader, it had too many limitations
+(#1531) (SiegeLord)
+@end itemize
+
+Windows
+
+@itemize
+@item
+Handle DSERR_NODRIVER when reporting error in DirectSound driver (Andrew
+Kravchuk)
+@item
+Don't set WM_EX_TOPMOST for Direct3D FULLSCREEN windows (SiegeLord)
+@item
+Make Python binding work on Windows (Mikhail Titov)
+@end itemize
+
+Linux
+
+@itemize
+@item
+Fixed memory leak (Helodity)
+@item
+Fix crash when using the LC_CTYPE=eo.ut8 on X11 (#1651) (SiegeLord)
+@item
+Improve behavior when the display is disconnected (SiegeLord)
+@end itemize
+
+TTF addon
+
+@itemize
+@item
+Add color emoji support (Elias Pschernig)
+@end itemize
+
+Audio addon
+
+@itemize
+@item
+Fix a race between detaching instances from mixers and reading from them
+(SiegeLord)
+@end itemize
+
+Image addon
+
+@itemize
+@item
+Fix loading of padded PCX files (Mikhail Titov)
+@end itemize
+
+Video addon
+
+@itemize
+@item
+Add @code{al_open_video_f} (jarroddavis68)
+@end itemize
+
+Primitives addon
+
+@itemize
+@item
+Move the most of the implementation into the core. This should be
+feature-neutral, but will enable future unification (#1003) (SiegeLord)
+@item
+Populate the UV coordinates for the vertices in many high-level
+primitives which enables some shader effects. See @code{ex_prim} example
+for how this looks. (Helodity, SiegeLord)
+@end itemize
+
+Documentation
+
+@itemize
+@item
+Document @code{ALLEGRO_MOUSE_STATE.display} (j-w-c-b)
+@item
+Remove GETTER/SETTER from generated docs (j-w-c-b)
+@item
+Fix the the return value of @code{al_insert_menu_item} (#1648)
+(SiegeLord)
+@end itemize
+
+Build system
+
+@itemize
+@item
+CMake improvements (Cristian Le)
+@item
+Export build tree with CMake to ease debugging (Mikhail Titov)
+@item
+Allow using SIMD instruction sets besides SSE (Mikhail Titov)
+@item
+Check vcpkg locations for dependencies (Mikhail Titov)
+@item
+Assorted CI improvements (SiegeLord, Mikhail Titov)
+@end itemize
+
+Examples
+
+@itemize
+@item
+@code{ex_joystick_hotplugging} is now more exciting (SiegeLord)
+@end itemize
+
+@node Changes from 5210 to 52101 December 2024
+@chapter Changes from 5.2.10 to 5.2.10.1 (December 2024)
+MacOS
+
+@itemize
+@item
+Fix some corner cases in the new keyboard input system (SiegeLord)
+@item
+Fix version-based conditional compilation (Rhys-T)
+@end itemize
+
+Packaging
+
+@itemize
+@item
+Fix the package script to check for makeinfo, this prevents malformed
+source achives from being created (as happened in 5.2.10) (SiegeLord)
+@end itemize
+
+@node Changes from 5291 to 5210 November 2024
+@chapter Changes from 5.2.9.1 to 5.2.10 (November 2024)
+Core
+
+@itemize
+@item
+Add a compatibility config option, @code{keyboard_version=xx.yy.zz} as
+well as the same but with @code{joystick_version} if it is necessary to
+restore the old behavior. This enables us to fix bugs with the input
+system, while providing a mechanism to restore old buggy behavior
+temporarily (SiegeLord)
+
+@item
+Assorted timer improvements (Connor Clark)
+
+@item
+Optimize inverse transformations. (SiegeLord)
+
+@item
+Fix the handling of the new window title in @code{ALLEGRO_STATE} (#1562)
+(Alexandre Martins)
+
+@item
+Add @code{ALLEGRO_TRACE_LEVEL} environment variable. This makes it
+easier to enable logging on release builds. (SiegeLord)
+
+@item
+Add @code{al_ref_info} to convert @code{ALLEGRO_USTR_INFO} to
+@code{ALLEGRO_USTR} (SiegeLord)
+
+@item
+Add @code{al_get_display_adapter} (#1578) (SiegeLord)
+
+@item
+Add @code{al_get_render_state} (Mark Oates)
+
+@end itemize
+
+MacOS
+
+@itemize
+@item
+Don't use usage numbers as joystick button ids on OSX. (#1527)
+(SiegeLord)
+
+@item
+Enable deadkey handling on MacOS (SiegeLord).
+
+@item
+Map numpad delete to @code{ALLEGRO_KEY_PAD_DELETE} and the weird ISO
+section key to @code{ALLEGRO_KEY_BACKSLASH2} (#1523) (SiegeLord)
+
+@end itemize
+
+Windows
+
+@itemize
+@item
+Fix key events when using modifiers (#1430, #1504) (SiegeLord)
+
+@item
+Fix undesirable deadzone when using analog joysticks (geecab)
+
+@item
+Use the correct monitor when restoring fullscreen window when using
+OpenGL (SiegeLord)
+
+@item
+Fix @code{ALLEGRO_FULLSCREEN_WINDOW} not working in certain conditions
+(SiegeLord)
+
+@end itemize
+
+Linux
+
+@itemize
+@item
+Fix joystick initialization when overriding IO (#1572) (Alexandre
+Martins)
+
+@item
+Make sure the bitmap for the initial icon is created as a memory bitmap
+(#1571) (SiegeLord)
+
+@end itemize
+
+Android
+
+@itemize
+@item
+Add more joystick buttons (#1482) (Alexandre Martins)
+
+@item
+Fix corruption of bitmaps created with the
+@code{ALLEGRO_NO_PRESERVE_TEXTURE} flag when the application loses focus
+(#1492) (Alexandre Martins)
+
+@item
+Fix a concurrency issue related to @code{al_acknowledge_drawing_halt}
+(Alexandre Martins)
+
+@item
+Add @code{al_android_open_fd} (Alexandre Martins)
+
+@item
+Assorted improvements (Alexandre Martins)
+
+@end itemize
+
+iPhone:
+
+@itemize
+@item
+Fix build (Todd Cope)
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Add MacOS support for listing output devices (Aldrik Ramaekers)
+@end itemize
+
+Acodec addon:
+
+@itemize
+@item
+Prefill @code{ALLEGRO_AUDIO_STREAM}s with data (SiegeLord)
+
+@item
+Add OpenMPT support. This is meant to replace DUMB, as DUMB is not
+maintained. You can use the compatibility config option
+@code{acodec_prefer_dumb} to temporarily make DUMB the preferred handler
+for module files, if Allegro is built with both DUMB and OpenMPT. Some
+modules may sound different under OpenMPT. (SiegeLord)
+
+@end itemize
+
+Native dialog addon:
+
+@itemize
+@item
+Add Android support (Alexandre Martins)
+
+@item
+Auto-scroll the native textlog on MacOS (SiegeLord)
+
+@item
+Fix monospace fonts on MacOS in the native textlog (SiegeLord)
+
+@item
+Improve the patterns arg in @code{al_create_native_file_dialog}
+(SiegeLord)
+
+@itemize
+@item
+Support for multiple pattern sets (Windows/Linux)
+@item
+Supports for custom pattern set descriptions (Windows/Linux)
+@item
+Support for MIME types on MacOS
+@item
+Remove the implicit catch-all pattern on Windows (the ``All files
+@emph{.}''), it was inconsistent with other platforms.
+@item
+Make MacOS do a better job at extracting the file extension
+@item
+Improve documentation overall
+@end itemize
+
+@end itemize
+
+Video addon:
+
+@itemize
+@item
+Make @code{al_is_video_playing} return false before
+@code{al_start_video} (SiegeLord)
+
+@item
+Make @code{ALLEGRO_VIDEO} work with the automatic destruction system
+(SiegeLord)
+
+@end itemize
+
+Build system:
+
+@itemize
+@item
+Reproducible build support (Andreas Rönnquist)
+
+@item
+Fix multiarch install location (Andreas Rönnquist)
+
+@end itemize
+
+Examples:
+
+@itemize
+@item
+Remove VLAs to improve Visual Studio support (Jeff Linahan, SiegeLord)
+
+@item
+Fix opaque black background pixels in explosion sprites in the Shooter
+demo (tstoeter)
+
+@end itemize
+
+@node Changes from 529 to 5291 January 2024
+@chapter Changes from 5.2.9 to 5.2.9.1 (January 2024)
+Linux:
+
+@itemize
+@item
+Fix a regression where toggling fullscreen window when menus are used
+stopped working (SiegeLord)
+@end itemize
+
+@node Changes from 528 to 529 November 2023
+@chapter Changes from 5.2.8 to 5.2.9 (November 2023)
+Android:
+
+@itemize
+@item
+Fix back button/gesture (alemart)
+
+@item
+Implement @code{al_get_joystick_name} (alemart)
+
+@item
+Great many assorted fixes (alemart)
+
+@end itemize
+
+Audio:
+
+@itemize
+@item
+Add @code{al_get_mixer_has_attached} and
+@code{al_get_voice_has_attached} (TRDario)
+
+@item
+Fix @code{al_set_audio_stream_playmode} return value and interaction
+with looping audio streams (Cody Licorish)
+
+@item
+Send PulseAudio silence if the attached mixer is stopped (SiegeLord)
+
+@end itemize
+
+Acodec:
+
+@itemize
+@item
+voc memory leak fixes (TRDario)
+
+@item
+Fix internal looping for mod files (SiegeLord)
+
+@end itemize
+
+Build system:
+
+@itemize
+@item
+Add a target for copying examples, letting you build the demo without
+the examples (SiegeLord).
+
+@item
+Improve CMake scripts (Gilad Reich)
+
+@item
+Support the newer WebP library which is split into two (SiegeLord).
+
+@end itemize
+
+Core:
+
+@itemize
+@item
+Add @code{al_can_set_keyboard_leds} and
+@code{al_can_get_mouse_cursor_position} (TRDario)
+
+@item
+Allow outputting logs to STDOUT via ALLEGRO_TRACE environment variable
+(SiegeLord)
+
+@item
+Add @code{al_get_current_shader} (TRDario)
+
+@item
+Add @code{al_get_window_borders} for Windows and Linux (Elias Pschernig
++ SiegeLord)
+
+@end itemize
+
+TTF:
+
+@itemize
+@item
+Fixes for @code{al_get_glyph_width}, @code{al_get_glyph_al_get_glyph}
+when interacting with zero-width/zero-height glyphs (Connor Clark)
+@end itemize
+
+MacOS:
+
+@itemize
+@item
+Don't close submenus on click (Todd Cope)
+
+@item
+Fix disabling menu items (Todd Cope)
+
+@item
+Add support for filtering by file extensions in the native file dialog
+(Todd Cope)
+
+@item
+Textlog improvements (Connor Clark)
+
+@item
+Fix improper display boundary for cursors (Connor Clark)
+
+@item
+Make @code{al_get_joystick_name} return the name of the joystick (Todd
+Cope)
+
+@item
+Fix off-by-one error for hat switches (Connor Clark)
+
+@item
+Add a workaround for live resizing not working. Enable it via
+@code{[osx]   allow_live_resize = false} in @code{allegro5.cfg} and then
+listen and respect @code{ALLEGRO_EVENT_DISPLAY_HALT/RESUME_DRAWING}
+events (#1350) (SiegeLord + Elias Pschernig)
+
+@end itemize
+
+Linux:
+
+@itemize
+@item
+Fix fullscreen window creation (#1349) (SiegeLord)
+
+@item
+Fix some X11 + fullscreen window interaction (#1358) (SiegeLord)
+
+@item
+Allow setting higher quality icons (SiegeLord + Trent Gamblin)
+
+@item
+Improve @code{DISPLAY_SWITCH_IN/OUT} events (#1390, #1367) (SiegeLord)
+
+@item
+Work on improving Window positioning (Elias Pschernig)
+
+@item
+Fix creating an initially maximized window (SiegeLord)
+
+@item
+Enable toggling and setting maximized/frameless modes when menus are
+used (SiegeLord)
+
+@item
+Fix popup menu (#1280) (SiegeLord)
+
+@item
+Make AltGr (right Alt) toggle the @code{ALLEGRO_KEYMOD_ALTGR} modifier
+(SiegeLord)
+
+@end itemize
+
+Windows:
+
+@itemize
+@item
+Fix drawable area mouse hiding state being out of sync (#1388)
+(SiegeLord)
+
+@item
+Fix some oddities with Shift + Alt on Windows (#1348)
+
+@item
+Work on improving Window positioning (SiegeLord)
+
+@item
+Make native file dialog respect the initial directory when
+@code{ALLEGRO_FILECHOOSER_FOLDER} is set (José Carlos HR)
+
+@item
+Fix the client area changing size on Windows when restoring a window
+(#1433) (SiegeLord)
+
+@item
+Fix crashes with menus and Windows (#1381) (SiegeLord)
+
+@item
+Fix keyboard modifier keys + char events (#1504, #1430) (SiegeLord)
+
+@end itemize
+
+SDL:
+
+@itemize
+@item
+Fix touch ids (Sebastian Krzyszkowiak)
+
+@item
+Fix @code{al_get_mouse_state} crash (Elias Pschernig)
+
+@item
+Implement @code{al_create_mouse_cursor} (Connor Clark)
+
+@item
+Implement @code{al_get_monitor_dpi} (Elias Pschernig)
+
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Assorted clarifications and improvements (various)
+@end itemize
+
+@node Changes from 527 to 528 June 2022
+@chapter Changes from 5.2.7 to 5.2.8 (June 2022)
+The main developers this time were: SiegeLord, Elias Pschernig,
+Sebastian Krzyszkowiak, Julian Smythe.
+
+Build system:
+
+@itemize
+@item
+Add a configuration summary. Currently this mostly reports the addon
+features.
+
+@item
+Fix build failure with sanitizers enabled.
+
+@item
+Remove @code{-Wdeclaration-after-statement}, MSVC had support for this
+for a while now.
+
+@item
+Bump minimum CMake version to 3.0.
+
+@end itemize
+
+Core:
+
+@itemize
+@item
+Add @code{al_fopen_slice} mode to prevent seek on close (Karl
+Robillard).
+
+@item
+Allow configuring bitmap wrapping via @code{al_set_new_bitmap_wrap}.
+
+@end itemize
+
+Graphics:
+
+@itemize
+@item
+Reject creating bitmaps with negative width or height (Peter Hull).
+
+@item
+Add a minimal shader implementation for GLSL. Minimal shader supports
+fewer features, but is faster (Issue #1120). Select it via the
+@code{_MINIMAL} suffix to the shader platforms.
+
+@end itemize
+
+Emscripten:
+
+@itemize
+@item
+Improve emscripten instructions for building demos (Connor Clark).
+
+@item
+Fix usage of SDL_Init for emscripten (Issue #1322) (Connor Clark).
+
+@end itemize
+
+OSX:
+
+@itemize
+@item
+Fix a few thread-related crashes.
+
+@item
+Don't use @code{-flat_namespace} in @code{LINK_FLAGS} (danielnachun).
+
+@item
+Make @code{al_get/set_window_position} work on Retina displays
+
+@end itemize
+
+Windows:
+
+@itemize
+@item
+Fix flickering when creating multisampling displays under DirectX.
+
+@item
+Fix multisampling selection on Windows with OpenGL.
+
+@item
+Fixed a bug which freezes and crashes the window in Windows OpenGL
+(HerrNamenlos123).
+
+@item
+Allow specifying shader model 3_0 for HLSL shaders (Issue #1154).
+
+@end itemize
+
+SDL:
+
+@itemize
+@item
+Ignore touch events from indirect touch devices.
+
+@item
+Use @code{SDL_PeepEvents} for event handling, to improve performance.
+
+@item
+Improve joysticks support (Issue #1326) (Connor Clark).
+
+@item
+Fix mouse axis setter (Connor Clark).
+
+@end itemize
+
+Linux:
+
+@itemize
+@item
+Use @code{clock_gettime} with @code{CLOCK_MONOTONIC} instead of
+@code{gettimeofday} (check-switch-26).
+@end itemize
+
+Android:
+
+@itemize
+@item
+Update Gradle to 5.0.
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Add @code{ALLEGRO_PLAYMODE_LOOP_ONCE} (Issue #1309).
+
+@item
+Add @code{al_play_audio_stream}, a `simple' API endpoint for audio
+stream playback.
+
+@end itemize
+
+Acodec addon:
+
+@itemize
+@item
+Fix Vorbis/Opus support under MSVC + Clang.
+
+@item
+Add audio identification / @code{al_identify_sample}.
+
+@item
+Use regular seeking for Ogg streams. The old one did cross-fades,
+causing unexpected behavior in certain cases (Issue #1310).
+
+@item
+Enable looping for modules.
+
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Allow identifying and listing audio devices via new API:
+@code{al_get_num_audio_output_devices},
+@code{al_get_audio_output_device}, @code{al_get_audio_device_name}
+(Aldrik Ramaekers).
+@end itemize
+
+Color addon:
+
+@itemize
+@item
+Add linear and oklab color spaces to the color addon.
+@end itemize
+
+Font addon:
+
+@itemize
+@item
+Fix declaration of al_draw_multiline_textf() as a PRINTFUNC
+(check-switch-26).
+@end itemize
+
+Image addon:
+
+@itemize
+@item
+Prevent RLE data in corrupt @code{.tga} from overflowing the buffer
+(Peter Hull).
+
+@item
+PCX loader validation (Peter Hull).
+
+@item
+Windows BMP - Make more robust to crashing (Peter Hull).
+
+@item
+Fix DDS compressed image loading when image dimensions are not multiple
+of block size (check-switch-26).
+
+@end itemize
+
+Native Dialog addon:
+
+@itemize
+@item
+Fix native dialogs addon compatibility with older GTK+ versions (Andrew
+Kravchuk).
+@end itemize
+
+TTF addon:
+
+@itemize
+@item
+Fixed TTF rendering when using transforms (check-switch-26).
+@end itemize
+
+PhysFS addon:
+
+@itemize
+@item
+Fix incorrect error handling in @code{PHYSFS_close} (j-w-c-b).
+@end itemize
+
+Video addon:
+
+@itemize
+@item
+Allow identifying video files via a magic number, exposed via
+@code{al_identify_video} (Issue #1262).
+
+@item
+Fix @code{al_is_video_addon_initalized} (Jayson).
+
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Document some reasonable defaults for
+@code{al_create_mixer}/@code{al_create_voice}.
+
+@item
+Refactor the audio docs to highlight the simple API better.
+
+@end itemize
+
+Misc:
+
+@itemize
+@item
+Fix a few data race issues, in an effort to fix ex_threads crashes on
+Linux.
+@end itemize
+
+Examples:
+
+@itemize
+@item
+Allow exiting from @code{ex_audio_timer} (BillKek)
+
+@item
+Add the Allegro 4 ``shooter'' demo.
+
+@item
+Fix @code{ex_threads} crash under D3D.
+
+@item
+Add @code{ex_audio_devices}.
+
+@item
+Update @code{ex_palette} to build with Emscripten (Issue #1318).
+
+@item
+Improve @code{ex_stream_seek}.
+
+@item
+Improve @code{ex_windows}.
+
+@end itemize
+
+@node Changes from 526 to 527 March 2021
+@chapter Changes from 5.2.6 to 5.2.7 (March 2021)
+The main developers this time were: SiegeLord, Peter Hull, Elias
+Pschernig, Aldrik Ramaekers, Andreas Rönnquist.
+
+Build system:
+
+@itemize
+@item
+Allow generating projects with a suffix (lorry-lee).
+
+@item
+Fix build under Clang-CL in Visual Studio.
+
+@end itemize
+
+Core:
+
+@itemize
+@item
+Avoid some undefined behavior errors.
+
+@item
+Return key modifiers in @code{ALLEGRO_EVENT_KEY_UP} and
+@code{ALLEGRO_EVENT_KEY_DOWN}.
+
+@item
+Allow calling @code{al_map_*} color functions before Allegro is
+initialized.
+
+@item
+Allow minimum bitmap size to be something other than 16 on non-Android
+platforms (controlled via @code{allegro5.cfg}).
+
+@item
+Add @code{al_get_monitor_refresh_rate} (only implemented on Windows for
+now).
+
+@end itemize
+
+Graphics:
+
+@itemize
+@item
+Fix @code{ALLEGRO_KEEP_INDEX} flag for bitmaps.
+
+@item
+Add @code{ALLEGRO_OPENGL_CORE_PROFILE} display flag.
+
+@end itemize
+
+Emscripten:
+
+@itemize
+@item
+The experimental Emscripten support (via the SDL backend) is now
+documented in @code{README_sdl.txt}.
+@end itemize
+
+OSX:
+
+@itemize
+@item
+Move more Cocoa operations to the main thread.
+
+@item
+Explicitly link CoreVideo to fix the static build.
+
+@end itemize
+
+Windows:
+
+@itemize
+@item
+Issue #1125: Speed up OpenGL extension detection (Tobias Scheuer).
+
+@item
+Use Unicode APIs when enumerating joysticks.
+
+@item
+Use @code{WM_DEVICECHANGE} rather than polling to detect joystick
+hotlugging, reducing input drops and lags (Todd Cope).
+
+@item
+Fix joystick polling period.
+
+@item
+Restore WinXP compatibility by using slightly older API when loading
+shared libraries (Julian Smythe).
+
+@item
+Fix build with HLSL disabled (Julian Smythe).
+
+@item
+Raise DirectInput @code{MAX_JOYSTICKS} to 32 and
+@code{DEVICE_BUFFER_SIZE} to 128.
+
+@end itemize
+
+SDL:
+
+@itemize
+@item
+Issue #1224: Fix bug in SDL voice driver.
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Allows playing sounds in reverse by specifying a negative speed.
+@end itemize
+
+Acodec addon:
+
+@itemize
+@item
+Fix edge-case looping in Ogg Vorbis stream (Cody Licorish)
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Use more sensible values for PulseAudio's playback buffer, potentially
+resolving some crashes and high CPU usage.
+@end itemize
+
+Native Dialog Addon:
+
+@itemize
+@item
+Migrate from GTK2 to GTK3. Sadly, we lose menu icons as GTK3 dropped
+support for them.
+@end itemize
+
+TTF addon:
+
+@itemize
+@item
+Allow initializing TTF addon before the Font addon.
+
+@item
+Shut-down the TTF addon automatically in @code{al_uninstall_system}.
+
+@end itemize
+
+PhysFS addon:
+
+@itemize
+@item
+Fix handling of native path separators.
+
+@item
+Stop using deprecated PhysFS API.
+
+@end itemize
+
+Primitives addon:
+
+@itemize
+@item
+Fix segfault in @code{al_draw_ribbon} when @code{num_segments > 128}
+(Rodolfo Borges).
+
+@item
+Issue 1215: Correctly handle small scales when determining subdivision
+level for high level primitives (Robin Heydon).
+
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Fix LaTeX errors in the generation of the reference manual PDF.
+
+@item
+Add links to examples into the reference manual.
+
+@item
+Allow pressing `S' to focus the search bar in the docs.
+
+@item
+Assorted documentation improvements.
+
+@end itemize
+
+Misc:
+
+@itemize
+@item
+Add a security policy and an associated private security mailing list -
+allegro-security@@lists.liballeg.org.
+
+@item
+Add Emscripten-powered examples to
+https://liballeg.org/examples_demos.html.
+
+@end itemize
+
+Examples:
+
+@itemize
+@item
+@code{ex_audio_simple} now displays instructions and supports
+bidirectional looping.
+
+@item
+Add default files to some audio examples.
+
+@end itemize
+
+@node Changes from 525 to 526 February 2020
+@chapter Changes from 5.2.5 to 5.2.6 (February 2020)
+The main developers this time were: SiegeLord, Peter Hull, Karthik Kumar
+Viswanathan, Elias Pschernig, Sebastian Krzyszkowiak, Doug Thompson,
+PmProg, RmBeer.
+
+Core:
+
+@itemize
+@item
+Fix timestamps being clamped to ints on touch inputs with X11.
+
+@item
+Fix al_utf8_width argument type mismatch on platforms where
+@code{sizeof(int) != 4}.
+
+@item
+Fix building for GNU/Linux without GNU extensions enabled
+
+@item
+Some refactoring to simplify adding new drivers.
+
+@end itemize
+
+Graphics:
+
+@itemize
+@item
+Fix for OpenGL version selection and reporting on Windows and X (Edgar
+Reynaldo).
+
+@item
+Report OpenGL version in display options on Android, iOS and Raspberry
+Pi.
+
+@item
+Fix creation of the bitmap depth buffer for non-square bitmaps (Kevin
+Wellwood).
+
+@item
+Fix @code{ALLEGRO_ALPHA_TEST_VALUE} not being interpreted correctly.
+
+@item
+Fix reported bitshifts for @code{ARGB_4444} and @code{RGBA_4444} pixel
+formats.
+
+@item
+Fix alpha test with the GLSL version.
+
+@end itemize
+
+Android:
+
+@itemize
+@item
+Do not build Android examples outside of Android.
+
+@item
+Use the cmake toolchain provided by the Android NDK.
+
+@item
+Use FLAG_KEEP_SCREEN_ON instead of a wakelock for screensaver
+inhibition.
+
+@item
+Use DisplayListener to listen to orientation changes.
+
+@item
+Implement @code{ALLEGRO_FRAMELESS} on Android. This hides the navigation
+buttons and the bar on top.
+
+@end itemize
+
+Linux:
+
+@itemize
+@item
+Fix @code{al_inhibit_screensaver} function.
+@end itemize
+
+OSX:
+
+@itemize
+@item
+Ensure system calls happen on the main thread.
+
+@item
+Make things work on Catalina.
+
+@end itemize
+
+Hurd:
+
+@itemize
+@item
+Fix pthreads (Andreas Rönnquist).
+@end itemize
+
+Windows:
+
+@itemize
+@item
+Implement Windows version check using non-deprecated functions.
+
+@item
+Abstract UNICODE vs ANSI string handling, switch to using UNICODE by
+default.
+
+@item
+Enable debug window for @code{DEBUGMODE} on Windows.
+
+@end itemize
+
+SDL:
+
+@itemize
+@item
+Fix requesting GLES profile on GL Allegro.
+
+@item
+Add audio recorder implementation.
+
+@item
+Don't link with dl, it's unnecessary.
+
+@end itemize
+
+Addons:
+
+@itemize
+@item
+Add a whole bunch of @code{al_is_*_initialized} functions (Mark Oates).
+@end itemize
+
+Acodec addon:
+
+@itemize
+@item
+Add MP3 support via the MiniMP3 library.
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Allow calling @code{al_destroy_audio_recorder} on NULL.
+
+@item
+Fix some stream garbage audio issues for high playback speeds.
+
+@end itemize
+
+Image addon:
+
+@itemize
+@item
+Add support for FreeImage library.
+
+@item
+Always prefer non-system image loaders.
+
+@end itemize
+
+Python wrapper:
+
+@itemize
+@item
+Fix a number of bugs (zachs18 and others).
+@end itemize
+
+Misc:
+
+@itemize
+@item
+Add an @code{.editorconfig} file.
+
+@item
+Convert our internal Python scripts to Python 3.
+
+@end itemize
+
+Examples:
+
+@itemize
+@item
+@code{ex_draw_bitmap} - Add more options.
+@end itemize
+
+@node Changes from 524 to 525 February 2019
+@chapter Changes from 5.2.4 to 5.2.5 (February 2019)
+The main developers this time were: Sebastian Krzyszkowiak, SiegeLord,
+Elias Pschernig, Bruce Pascoe, Aldrik Ramaekers, Firat Salgur.
+
+Core:
+
+@itemize
+@item
+Try to identify bitmap format for unknown extensions.
+
+@item
+Add some missing OpenGL 4.3 functions.
+
+@item
+Add @code{al_create_thread_with_stacksize} to create threads with a
+custom stack size. (Aldrik Ramaekers)
+
+@item
+Add @code{al_get_system_id} function, letting you disambiguate platforms
+at runtime.
+
+@end itemize
+
+Graphics:
+
+@itemize
+@item
+Add @code{al_get_monitor_dpi} to query the DPI of a monitor.
+
+@item
+Add new API for making blender a bitmap-local state (like
+transformations), which can simplify some code. See
+@code{al_set_bitmap_blender} and the related APIs. Also see the
+@code{ex_blend_target} example.
+
+@item
+Added @code{al_transpose_transform}. This is useful for rotation
+transformations.
+
+@item
+Rework internal GLES support for better portability.
+
+@item
+Don't force POT bitmaps on GLES.
+
+@item
+Fix repeated bitmap locking on OpenGL.
+
+@end itemize
+
+Android:
+
+@itemize
+@item
+Various documentation and other improvements (Christian Mauduit).
+
+@item
+Fix OpenGL version reporting after display creation.
+
+@end itemize
+
+iOS:
+
+@itemize
+@item
+Fix OpenGL version reporting after display creation.
+@end itemize
+
+Linux:
+
+@itemize
+@item
+Improve linux joystick detections.
+
+@item
+Fix a number of memory leaks/crashes in the audio addon when using
+pulseaudio/alsa. (Julian Smythe)
+
+@item
+Fix compilation with Mesa 18.2.5 and later.
+
+@item
+Fix OpenGL version reporting after display creation (Edgar Reynaldo).
+
+@item
+Fix requesting specific OpenGL versions via display options (Edgar
+Reynaldo).
+
+@end itemize
+
+OSX:
+
+@itemize
+@item
+Make @code{al_get_monitor_info} return the correct values for Retina
+displays.
+
+@item
+Fix vsync on OSX 10.14+.
+
+@end itemize
+
+RaspberryPi:
+
+@itemize
+@item
+Fix OpenGL version reporting after display creation.
+@end itemize
+
+Windows:
+
+@itemize
+@item
+Fix toggling of menu checkboxes by id.
+
+@item
+Fix @code{al_draw_indexed_primitive} while using Direct3D.
+
+@item
+Fix crash when passing @code{NULL} display to
+@code{al_show_native_file_dialog} while using
+@code{ALLEGRO_FILECHOOSER_FOLDER}.
+
+@item
+Fix OpenGL version reporting after display creation (Edgar Reynaldo).
+
+@item
+Fix requesting specific OpenGL versions via display options (Edgar
+Reynaldo).
+
+@end itemize
+
+SDL:
+
+@itemize
+@item
+Sebastian Krzyszkowiak has spent a lot of effort to making the SDL
+backend usable as a nearly fully featured Allegro backend. You can use
+it on platforms native Allegro implementations do not support (such as
+emscripten, etc.).
+@end itemize
+
+Addons:
+
+@itemize
+@item
+Better logging when failing to load a resource.
+
+@item
+Fix a memory leak when destroying a mixer with attached streams.
+
+@item
+Fix a memory leak in the audio destroying a mixer with attached streams.
+
+@end itemize
+
+Acodec addon:
+
+@itemize
+@item
+Allow modules to loop properly when the user hasn't specified loop
+points. (Todd Cope)
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Better support for big endian. (Douglas Mencken)
+@end itemize
+
+TTF addon:
+
+@itemize
+@item
+Added support of HarfBuzz in FreeType (Arves100).
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Source links now point to the correct commit on GitHub.
+
+@item
+General improvements and clarifications.
+
+@end itemize
+
+Examples:
+
+@itemize
+@item
+Add @code{ex_blend_target}.
+@end itemize
+
+@node Changes from 523 to 524 February 2018
+@chapter Changes from 5.2.3 to 5.2.4 (February 2018)
+The main developers this time were: Sebastian Krzyszkowiak, Elias
+Pschernig, SiegeLord
+
+Core:
+
+@itemize
+@item
+Fix errors when reading/writing 0 byte buffers (Bruce Pascoe).
+
+@item
+Re-initialize TLS when Allegro is installed (Issue #865).
+
+@item
+Add @code{al_transform_coordinates_4d}.
+
+@item
+Don't initialize the trace mutex multiple times (Issue #874).
+
+@item
+Fix 3D (non-projection) transforms with @code{al_hold_bitmap_drawing}.
+
+@end itemize
+
+Raspberry Pi port:
+
+@itemize
+@item
+Fix compilation on RPI.
+@end itemize
+
+Android port:
+
+@itemize
+@item
+Remove limit on the working directory length.
+
+@item
+Fix @code{ALLEGRO_MAXIMIZED} flag.
+
+@item
+Fix build with older Android NDKs.
+
+@item
+Remove @code{glClear} hack for Android 2.1.
+
+@end itemize
+
+Linux port:
+
+@itemize
+@item
+Make compositor bypass configurable in X11, and bypass only when
+fullscreen by default.
+@end itemize
+
+OSX port:
+
+@itemize
+@item
+Fix a few OSX retina scaling issues (Issue #851).
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Fix ALSA lag.
+
+@item
+Add an option to use the desktop window when initializing DirectSound
+(Issue #877).
+
+@end itemize
+
+Font addon:
+
+@itemize
+@item
+Add support for bmfont format.
+@end itemize
+
+Native dialog addon:
+
+@itemize
+@item
+Resize the display on Windows when hiding/showing the menu (Issue #860).
+
+@item
+Detect when @code{al_popup_menu} fails to actually work under GTK (Issue
+#808).
+
+@item
+Don't clear the top-level menu when destroying the popup menu.
+
+@end itemize
+
+Build system:
+
+@itemize
+@item
+Don't link in libm on MSVC for DUMB (Issue #847).
+
+@item
+Don't use the LOCATION property (Issue #847).
+
+@item
+Don't use SYSTEM for DirectX includes.
+
+@item
+Add hints for mingw-w64 path locations for DirectX includes/libs.
+
+@end itemize
+
+Python binding:
+
+@itemize
+@item
+Fix the Python code-generation scripts to run under Python 2.
+@end itemize
+
+Lua binding:
+
+@itemize
+@item
+Add script to generate LuaJIT C API for Allegro 5 (BQ).
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Many improvements (Andreas Rönnquist, others)
+@end itemize
+
+Examples:
+
+@itemize
+@item
+Add a texture to the skybox in @code{ex_camera}.
+@end itemize
+
+@node Changes from 522 to 523 October 2017
+@chapter Changes from 5.2.2 to 5.2.3 (October 2017)
+The main developers this time were: Elias Pschernig, SiegeLord,
+Sebastian Krzyszkowiak, Vitaliy V. Tokarev, Simon Naarmann, Bruno Félix
+Rezende Ribeiro, Trent Gamblin).
+
+Core:
+
+@itemize
+@item
+Add @code{al_path_ustr} (Bruce Pascoe).
+
+@item
+Handle NULL sections more gracefully with the config API.
+
+@item
+Add missing @code{glStencilMaskSeparate prototype} (Aaron Bolyard).
+
+@item
+Add @code{al_clear_keyboard_state}.
+
+@item
+Don't add blank lines before config sections when writing them out.
+
+@item
+Fix @code{fs_stdio_read_directory} appending an extra slash.
+
+@item
+Fix @code{al_set_window_constraints} when the flag ALLEGRO_MAXIMIZED is
+set.
+
+@item
+Fix @code{al_set_clipping_rectangle} when out-of-bounds (Bruce Pascoe).
+
+@item
+Enable blocked locking of S3TC formats unconditionally.
+
+@end itemize
+
+Raspberry Pi port:
+
+@itemize
+@item
+Set default file interface when attempting to read /boot/config.txt.
+@end itemize
+
+Android port:
+
+@itemize
+@item
+Replace the old build system that used deprecated tools with a new
+Gradle-based system.
+
+@item
+Work around crashes on some Androids when an FBO is bound during
+@code{egl_SwapBuffers}.
+
+@item
+Fix LocalRef leak when opening files using APK interface.
+
+@item
+Remove -Wno-psabi switches from Toolchain-android.cmake.
+
+@end itemize
+
+Linux port:
+
+@itemize
+@item
+Make three finger salute and LED toggle configurable.
+
+@item
+Fix KEY_CHAR events under X11 with compose key enabled.
+
+@item
+Fix clearing the @code{ALLEGRO_MAXIMIZED} flag under X11.
+
+@item
+Add @code{al_x_set_initial_icon}.
+
+@item
+Free wm_hints in @code{set_initial_icon}.
+
+@item
+Read Allegro system config from ~/.allegro5rc on Unix.
+
+@end itemize
+
+Windows port:
+
+@itemize
+@item
+Make bitmap contents persist again after device loss.
+
+@item
+Add large file support for MSVC.
+
+@item
+Only test cooperative lavel if device is known to be lost.
+
+@item
+Don't leak the @code{D3DEffect} when attaching multiple sources.
+
+@item
+Fix @code{al_get_monitor_info} (Tobias Scheuer).
+
+@end itemize
+
+OSX port:
+
+@itemize
+@item
+Various fixes for OSX 10.6.
+
+@item
+Fix some Bluetooth mice on OS X (Tom Bass).
+
+@item
+Fixed deprecation warning when starting OSX console app (Tom Bass).
+
+@item
+Fix OSX magic main with the LTO switch (Evert Glebbeek).
+
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Allow setting the buffer size for ALSA.
+
+@item
+Don't apply gain twice for sample instances and streams when pan is not
+@code{ALLEGRO_PAN_NONE}.
+
+@item
+Disallow attaching mixers with different channel configurations.
+
+@item
+Add @code{al_set_sample_instance_channel_matrix} and
+@code{al_set_audio_stream_channel_matrix}.
+
+@item
+Don't free the extra pointer in DirectSound if voice fails to play for
+some reason.
+
+@item
+Add @code{al_lock_sample_id} and @code{al_unlock_sample_id}.
+
+@item
+For OpenAL, detach from buffers before deleting.
+
+@item
+Return true when seeking mod audio streams.
+
+@end itemize
+
+Acodec addon:
+
+@itemize
+@item
+Free audio stream buffer in flac_stream_close.
+
+@item
+Add DUMB 2.0 support.
+
+@end itemize
+
+Color addon:
+
+@itemize
+@item
+Add XYZ, xyY, Lab and LCH color spaces.
+
+@item
+Remove ``purwablue'' named color, add ``rebeccablue''.
+
+@end itemize
+
+Native dialog addon:
+
+@itemize
+@item
+Improve save dialogs under GTK driver.
+
+@item
+Improved path behavior in GTK native file dialog ([bk]door.maus).
+
+@item
+Enable @code{ALLEGRO_FILECHOOSER_FOLDER} On Linux (Todd Cope).
+
+@item
+Use unique ids to identify menu items internally, fixing their event
+sources.
+
+@item
+Make the native message box return 2 on Windows when cancel is pressed.
+
+@end itemize
+
+Image addon:
+
+@itemize
+@item
+Set compression level to @code{Z_DEFAULT_COMPRESSION} in png saver by
+default.
+
+@item
+Make PNG, JPEG compression level configurable.
+
+@item
+Make PNG gamma value configurable.
+
+@item
+Add WebP support with libwebp.
+
+@end itemize
+
+Video addon:
+
+@itemize
+@item
+Allow calling @code{al_init_video_addon} after
+@code{al_shutdown_video_addon} was called.
+@end itemize
+
+Build system:
+
+@itemize
+@item
+Detect and link optional FreeType dependencies.
+
+@item
+Add a CMake option to prefer static dependencies.
+
+@item
+Fix SDL platform build.
+
+@end itemize
+
+Python binding:
+
+@itemize
+@item
+Fix some corrupted regexps in the generation script (verderten).
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Lots of improvements as usual (Edgar Reynaldo, Mark Oates, twobit).
+@end itemize
+
+Examples:
+
+@itemize
+@item
+Fix various issues with @code{ex_curl}.
+
+@item
+Fix memory leak in @code{ex_audio_simple} (Rm Beer).
+
+@end itemize
+
+@node Changes from 5211 to 522 December 2016
+@chapter Changes from 5.2.1.1 to 5.2.2 (December 2016)
+The main developers this time were: Trent Gamblin, SiegeLord, Elias
+Pschernig.
+
+Core:
+
+@itemize
+@item
+Don't accumulate time in the timer while it is stopped.
+
+@item
+Use dynamic OpenGL ES checks, so binaries produced on newer platforms
+don't crash on older ones.
+
+@item
+Destabilize the OpenGL extensions API (BREAKING CHANGE!).
+
+@end itemize
+
+Raspberry Pi port:
+
+@itemize
+@item
+Add various optimizations.
+
+@item
+Fix @code{al_set_mouse_xy} under X.
+
+@end itemize
+
+Android port:
+
+@itemize
+@item
+Fix buffer overrun and memory leak in the clipboard support.
+
+@item
+Add WANT_GLES3 to disable some of the newer features on platforms where
+they aren't supported.
+
+@item
+Fix build in Android versions below 3.1.
+
+@item
+Fix a crash when activity is destroyed/paused.
+
+@item
+Allow building for android mips, arm64 and mips64.
+
+@item
+Add @code{al_android_get_jni_env} and @code{al_android_get_activity}
+utility functions.
+
+@item
+Update manifest files for newer Android versions.
+
+@end itemize
+
+Windows port:
+
+@itemize
+@item
+Handle keyboard input properly when Ctrl is pressed (Tobias Scheuer).
+@end itemize
+
+Hurd port:
+
+@itemize
+@item
+Define a fallback PATH_MAX (Andreas Rönnquist).
+@end itemize
+
+OSX port:
+
+@itemize
+@item
+Clear window to black when going in/out of fullscreen.
+
+@item
+Fix window centering when going out of FULLSCREEN_WINDOW mode.
+
+@item
+Fix OSX 10.12 build.
+
+@item
+Allow 32 bit builds on OSX (MarcusCalhoun-Lopez).
+
+@end itemize
+
+Build system:
+
+@itemize
+@item
+Fix issues with building on GCC6 on Windows.
+
+@item
+Fix source directory littering while configuring the Android build.
+
+@end itemize
+
+Python binding:
+
+@itemize
+@item
+Add support Python 3 (Gabriel Queiroz).
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Document the behavior of @code{al_set_target_bitmap} with respect to
+transformations (Edgar Reynaldo).
+
+@item
+Fix typo in @code{al_use_transform} docs (Ryan Roden-Corrent).
+
+@end itemize
+
+Examples:
+
+@itemize
+@item
+Add kerning to the @code{al_get_glyph} example in ex_ttf.
+
+@item
+Various fixes in ex_camera (Erich Erstu).
+
+@end itemize
+
+@node Changes from 521 to 5211 August 2016
+@chapter Changes from 5.2.1 to 5.2.1.1 (August 2016)
+The main developers this time were: Trent Gamblin, SiegeLord.
+
+Core:
+
+@itemize
+@item
+Enforce backwards compatibility in the version check, rather than
+erroneously allowing forwards compatiblity.
+
+@item
+Temporarily remove new extensions in ALLEGRO_OGL_EXT_LIST as that broke
+ABI compatibility.
+
+@end itemize
+
+OSX port:
+
+@itemize
+@item
+Temporarily revert changes in joystick detection, as it did not interact
+well with some joysticks.
+@end itemize
+
+Windows port:
+
+@itemize
+@item
+Fix the clear display to black right away to avoid an ugly white flash
+change.
+@end itemize
+
+@node Changes from 520 to 521 July 2016
+@chapter Changes from 5.2.0 to 5.2.1 (July 2016)
+The main developers this time were: Elias Pschernig, Trent Gamblin,
+SiegeLord, Ryan Roden-Corrent, Boris Carvajal and Peter Hull.
+
+Core:
+
+@itemize
+@item
+Optimize bitmap holding a bit (Bruce Pascoe).
+
+@item
+Add @code{al_get/set_depth/samples} (OpenGL only for now).
+
+@item
+Optimize destruction performance when you have thousands of objects
+(e.g.@ sub-bitmaps).
+
+@item
+Use low floating point precision for the OpenGL fragment shaders, which
+helps performance a lot on mobile platforms.
+
+@item
+Don't stop and join the timer thread when stopping the last timer
+(prevents unnecessary delay in this situation on some platforms).
+
+@item
+Add @code{al_backup_dirty_bitmap} and @code{al_backup_dirty_bitmaps} to
+more finely control when bitmap context backup is performed.
+
+@end itemize
+
+Android port:
+
+@itemize
+@item
+Fix Android app issues when woken up during sleep.
+
+@item
+Specify the Android toolchain file on the command line now.
+ANDROID_NDK_TOOLCHAIN_ROOT now has to be specified in an environment
+variable.
+
+@end itemize
+
+OSX port:
+
+@itemize
+@item
+Improve joystick enumeration (Todd Cope).
+
+@item
+Make @code{al_set_new_window_title} work correctly.
+
+@item
+Don't send duplicate mouse move events.
+
+@item
+Fix mouse warping behavior.
+
+@item
+Exit fullscreen mode if ALLEGRO_FULLSCREEN_WINDOW is set when destroying
+a display (otherwise if you destroy and recreate display without
+terminating the program, a white window kicks around).
+
+@end itemize
+
+iOS port:
+
+@itemize
+@item
+Make it compile again.
+
+@item
+Don't backup textures as it is unnecessary.
+
+@item
+Update minimum iOS to version to 6.1.
+
+@item
+Disable the native png loader in favor of libpng, as it is broken on
+Apple's end.
+
+@item
+Create library when creating the archive.
+
+@end itemize
+
+Windows port:
+
+@itemize
+@item
+Fix the D3D target bitmap bug.
+
+@item
+Clear display to black right away to avoid an ugly white flash.
+
+@end itemize
+
+Raspberry Pi port:
+
+@itemize
+@item
+Fix system cursor support.
+@end itemize
+
+Linux port:
+
+@itemize
+@item
+Make @code{al_set_new_window_title} work correctly.
+@end itemize
+
+Build system:
+
+@itemize
+@item
+Use PROJECT_SOURCE_DIR and PROJECT_BINARY_DIR instead of
+CMAKE_SOURCE_DIR and CMAKE_BINARY_DIR. This lets you use Allegro as a
+sub-project in your CMake project.
+
+@item
+Fix GDIPlus finding in cmake-gui (Bruce Pascoe).
+
+@item
+Add .gitignore and ignore build/ dir (Mark Oates).
+
+@item
+Fix building examples with non-Allegro dependencies with the monolith
+build.
+
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Various documentation updates (Daniel Johnson and others).
+@end itemize
+
+Other:
+
+@itemize
+@item
+Add more @code{#include} statements in Allegro headers, so it's easier
+to use them in isolation (Jordan Woehr).
+
+@item
+Allow marking tests as being hardware only.
+
+@item
+Prefix some private Allegro macros and types to not pollute the
+namespace.
+
+@item
+Make set_shader_uniform api const-correct (Bruce Pascoe).
+
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Adjust loop end position when calling
+@code{al_set_sample_instance_length}.
+@end itemize
+
+Acodec addon:
+
+@itemize
+@item
+Allow file-backed audio streams to be restarted after they finish.
+
+@item
+Add Opus codec support.
+
+@end itemize
+
+Image addon:
+
+@itemize
+@item
+Fail gracefully if not built with PNG/JPG loaders.
+@end itemize
+
+Native dialog addon:
+
+Font addon:
+
+@itemize
+@item
+Make @code{al_get_text_dimensions} and @code{al_get_glyph_dimensions}
+return exact bounding boxes (koro).
+
+@item
+Add @code{ALLEGRO_GLYPH} structure and @code{al_get_glyph}, allowing for
+some additional optimization when drawing fonts.
+
+@end itemize
+
+Examples:
+
+@itemize
+@item
+Add more controls to @code{ex_audio_props}.
+
+@item
+Add an example of using Enet with Allegro.
+
+@end itemize
+
+@node Changes from 51131 to 520 April 2016
+@chapter Changes from 5.1.13.1 to 5.2.0 (April 2016)
+The main developers this time were: SiegeLord, Polybios, Mark Oates,
+Elias Pschernig and Jonathan Seeley.
+
+Core:
+
+@itemize
+@item
+Add @code{al_is_event_source_registered} (koro).
+
+@item
+Make destructors log messages more meaningful.
+
+@item
+Mouse emulation API for touch devices is now unstable.
+
+@item
+Rename @code{al_convert_bitmaps} to @code{al_convert_memory_bitmaps}.
+
+@end itemize
+
+Input:
+
+@itemize
+@item
+Haptic API is now unstable.
+@end itemize
+
+Android port:
+
+@itemize
+@item
+Fixed bogus display destruction on Android which previously caused
+zombie states.
+@end itemize
+
+OSX port:
+
+@itemize
+@item
+Fix OSX mouse state position scaling.
+
+@item
+Fix other various scaling issues.
+
+@item
+Make toggling ALLEGRO_FRAMELESS work.
+
+@item
+Fix an issue where fullscreen windows would occasionally leave empty
+space for the titlebar.
+
+@item
+Fix incorrect debug assert in the audio addon.
+
+@end itemize
+
+Windows port:
+
+@itemize
+@item
+Make Allegro apps DPI-aware by default, which means that they won't be
+scaled by the OS.
+
+@item
+Fix compilation for the CPU detection code on some compilers.
+
+@item
+Don't sync the D3D bitmap when locking with WRITE_ONLY.
+
+@item
+Remove dsound.dll runtime loading.
+
+@item
+Don't link xinput and d3dx9 libraries (they are still required at
+runtime though if you're using the relevant features).
+
+@item
+Fix a bug where al_wait_for_event_timed can block despite 0 timeout
+(Aldo Nunez).
+
+@end itemize
+
+Build system:
+
+@itemize
+@item
+Install PDB files when building with MSVC.
+@end itemize
+
+Documentation:
+
+@itemize
+@item
+Fix source links for API entries with multi-line prototypes.
+
+@item
+Make the readme look prettier on GitHub.
+
+@item
+Tons of assorted documentation improvements, especially for the audio
+addon.
+
+@end itemize
+
+Other:
+
+@itemize
+@item
+Add a stability system where some unstable APIs need to be opted into by
+defining @code{ALLEGRO_UNSTABLE} before including Allegro headers.
+@end itemize
+
+Audio addon:
+
+@itemize
+@item
+Fix sporadic deadlocks
+
+@item
+Recorder API is now unstable.
+
+@end itemize
+
+Native dialog addon:
+
+@itemize
+@item
+@code{al_toggle_menu_item_flags} is now unstable.
+@end itemize
+
+TTF addon:
+
+@itemize
+@item
+Add an option to pre-cache the glyphs, useful for platforms where the
+current algorithm is buggy (typically some Android devices).
+@end itemize
+
+Video addon:
+
+@itemize
+@item
+Temporarily remove FFmpeg backend, as it was too buggy, didn't build and
+was too hard to fix.
+@end itemize
+
+Examples:
+
+@itemize
+@item
+Make @code{ex_vsync} less likely cause a seizure.
+
+@item
+Make @code{ex_draw_bitmap} and @code{ex_touch_input} switch in/out on
+Android.
+
+@item
+Add documentation to @code{ex_bitmap} (Daniel Johnson).
+
+@item
+Improve @code{ex_logo} text entry experience.
+
+@end itemize
+
+@bye
