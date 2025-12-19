@@ -28,7 +28,7 @@ Based on `drawboard/proposal.md` and current project status.
   - [x] Wall kicks (Implemented using offset subtraction method).
   - [x] _Verify_ SRS offset tables against Tetris Guideline.
 - [x] **Damage Calculation**
-  - [ ] Combo table.
+  - [x] Combo table.
   - [x] T-Spin detection (3-corner rule).
   - [x] All-Spin detection (Twist logic).
   - [x] Back-to-Back bonus.
@@ -64,4 +64,3 @@ Based on `drawboard/proposal.md` and current project status.
 - [ ] **Main Menu** (Start, Settings, Exit).
 - [ ] **Pause Menu**.
 - [ ] **Game Over Screen** (Show final stats, Restart button).
-
