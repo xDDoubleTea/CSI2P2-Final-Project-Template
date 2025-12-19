@@ -28,18 +28,24 @@ void Board::init()
     }
     // Initial spawn
     holdPiece = nullptr;
+    debug_log("Trying to spawn initial piece...\n");
     spawnPiece();
     // Test Garbage
     // garbageQueue = 5;
 }
 
-void Board::update()
+bool Board::update()
 {
+    bool activePieceUpdated = false;
     if (activePiece)
-        activePiece->update(*this);
+        activePieceUpdated = activePiece->update(*this);
     else
         debug_log("No active piece to update.\n");
 
+    // debug_log("Active piece updated: %s\n", activePieceUpdated ? "true" : "false");
+    if (!activePieceUpdated) {
+        return false; // Game over or error
+    }
     DataCenter* DC = DataCenter::get_instance();
     if (DC->key_state[ALLEGRO_KEY_C] && !DC->prev_key_state[ALLEGRO_KEY_C]) {
         // Hold
@@ -49,15 +55,12 @@ void Board::update()
             holdPiece->resetRotation();
             spawnPiece();
         } else {
-
             holdPiece->setHold(true);
             holdPiece->resetRotation();
             std::swap(holdPiece, activePiece);
         }
-        holdPiece->setHold(true);
-        holdPiece->resetRotation();
-        std::swap(holdPiece, activePiece);
     }
+    return true;
 }
 
 void Board::updateGravityTimer(bool rotated, bool moved)
@@ -99,7 +102,7 @@ bool Board::checkCollision(TetriminoType type, int rotation, int x, int y)
     return false;
 }
 
-void Board::lockPiece(const Tetrimino& t)
+bool Board::lockPiece(const Tetrimino& t)
 {
     int typeIdx = static_cast<int>(t.getType());
     int rotation = t.getRotation();
@@ -120,7 +123,7 @@ void Board::lockPiece(const Tetrimino& t)
     DC->stat->updatePieceStat(linesCleared, activePiece->TSpin, isPerfectClear(), (linesCleared == 4 || activePiece->AllSpin || activePiece->TSpin), activePiece->AllSpin);
     DC->stat->increasePiecesPlaced();
     size_t damage = t.damageDealt(linesCleared, isPerfectClear(), (linesCleared == 4 || activePiece->AllSpin || activePiece->TSpin), activePiece->TSpin, activePiece->AllSpin);
-    debug_log("Damage dealt: %zu\n", damage);
+    // debug_log("Damage dealt: %zu\n", damage);
     DC->stat->increaseAttacksSent(damage);
     garbageQueue -= std::min(garbageQueue, damage);
 
@@ -132,7 +135,8 @@ void Board::lockPiece(const Tetrimino& t)
     delete activePiece;
     activePiece = nullptr;
 
-    spawnPiece();
+    // Spawn new piece, return false if game over
+    return spawnPiece();
 }
 
 bool Board::isPerfectClear()
@@ -149,7 +153,7 @@ bool Board::isPerfectClear()
 void Board::addGarbageLines(size_t count)
 {
     // Shift grid up
-    for (int y = 0; y < GRID_H - count; y++) {
+    for (size_t y = 0; y < GRID_H - count; y++) {
         for (int x = 0; x < GRID_W; x++) {
             grid[y][x] = grid[y + count][x];
         }
@@ -198,13 +202,20 @@ size_t Board::clearLines()
     return linesCleared;
 }
 
-void Board::spawnPiece()
+bool Board::spawnPiece()
 {
+    // Check game over
     if (nextQueue.size() < 7 + 1) {
         generate7Bag();
     }
+
+    if (checkCollision(nextQueue.front()->getType(), 0, 4, 0)) {
+        debug_log("Game Over triggered.\n");
+        return false;
+    }
     activePiece = new Tetrimino(nextQueue.front()->getType());
     nextQueue.pop();
+    return true;
 }
 
 void Board::draw()
@@ -274,9 +285,6 @@ void Board::drawNextQueue(int count)
 
 void Board::drawHoldPiece(TetriminoType type)
 {
-    if (type == TetriminoType::O && holdPiece == nullptr)
-        return;
-
     int typeIdx = static_cast<int>(type);
     ColorRGB c = tetrimino_colors[typeIdx];
     ALLEGRO_COLOR color = al_map_rgb(c.r, c.g, c.b);
@@ -321,7 +329,6 @@ void Board::generate7Bag()
     std::shuffle(indices.begin(), indices.end(), std::default_random_engine(std::random_device {}()));
     for (int i = 0; i < 7; ++i) {
         nextQueue.push(new Tetrimino(static_cast<TetriminoType>(indices[i])));
-        debug_log("Queued Tetrimino type: %d\n", indices[i]);
     }
 
     // std::queue<Tetrimino*> tempQueue = nextQueue;
@@ -331,5 +338,5 @@ void Board::generate7Bag()
     //     debug_log("Next Queue contains Tetrimino type: %d\n", static_cast<int>(t->getType()));
     // }
 
-    debug_log("Generated 7-bag of Tetriminos.\n");
+    // debug_log("Generated 7-bag of Tetriminos.\n");
 }

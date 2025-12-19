@@ -16,6 +16,12 @@ public:
 public:
     Game(bool testMode = false);
     ~Game();
+    enum class STATE {
+        START, // -> LEVEL
+        LEVEL, // -> PAUSE, END
+        PAUSE, // -> LEVEL
+        END
+    };
     void game_init();
     bool game_update();
     void game_draw();
@@ -25,12 +31,6 @@ private:
      * @brief States of the game process in game_update.
      * @see Game::game_update()
      */
-    enum class STATE {
-        START, // -> LEVEL
-        LEVEL, // -> PAUSE, END
-        PAUSE, // -> LEVEL
-        END
-    };
     STATE state;
     ALLEGRO_EVENT event;
     ALLEGRO_BITMAP* game_icon;
@@ -47,6 +47,7 @@ private:
     UI* ui;
     Tetris::Board* board;
     Tetris::Stat* stat;
+    Button* startButton;
 };
 
 #endif

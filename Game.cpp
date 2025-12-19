@@ -150,13 +150,18 @@ void Game::game_init()
     stat = new Tetris::Stat();
     DC->stat = stat;
 
+    startButton = new Button(DC->window_width / 2.0 - 100, 300, 200, 50, "Start Game");
+    startButton->setFont(FC->courier_new[FontSize::MEDIUM]);
+    startButton->setOnClickCallback(
+        [this]() {
+            debug_log("<Game> state: change to LEVEL\n");
+            this->state = STATE::LEVEL;
+        });
     if (board)
         delete board;
     debug_log("Initializing Board...\n");
     board = new Tetris::Board();
 
-    std::cout << "Board address in Game::game_init(): " << board << std::endl;
-    board->init();
     debug_log("Board initialized.\n");
     DC->board = board;
 
@@ -194,10 +199,10 @@ bool Game::game_update()
         //     debug_log("<Game> state: change to LEVEL\n");
         //     state = STATE::LEVEL;
         // }
-        if (DC->key_state[ALLEGRO_KEY_ENTER] && !DC->prev_key_state[ALLEGRO_KEY_ENTER]) {
-            debug_log("<Game> state: change to LEVEL\n");
-            state = STATE::LEVEL;
-        }
+        if (startButton)
+            startButton->update();
+        else
+            GAME_ASSERT(false, "Start Button is not initialized.");
 
         break;
     }
@@ -213,15 +218,19 @@ bool Game::game_update()
             debug_log("<Game> state: change to PAUSE\n");
             state = STATE::PAUSE;
         }
-        if (board)
-            board->update();
-        else
+        if (board) {
+            if (!board->update()) {
+                debug_log("<Game> state: change to END\n");
+                state = STATE::END;
+            }
+        } else {
             GAME_ASSERT(false, "Board is not initialized.");
+        }
+
         if (stat)
             stat->update();
         else
             GAME_ASSERT(false, "Stat is not initialized.");
-
         // if (true) {
         //     debug_log("<Game> state: change to END\n");
         //     state = STATE::END;
@@ -293,6 +302,7 @@ void Game::game_draw()
     switch (state) {
     case STATE::START: {
         ui->drawStartScreen();
+        startButton->draw();
     }
     case STATE::LEVEL: {
         break;

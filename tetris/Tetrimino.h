@@ -16,7 +16,7 @@ public:
     Tetrimino(Tetris::TetriminoType type);
 
     // Core game loop methods
-    void update(Board& board);
+    bool update(Board& board);
     void draw(int startX, int startY, int blockSize);
 
     // Getters for collision checks

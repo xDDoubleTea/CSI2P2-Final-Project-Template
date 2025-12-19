@@ -1,4 +1,6 @@
 #include "UI.h"
+#include "Button.h"
+#include "Game.h"
 #include "Utils.h"
 #include "data/DataCenter.h"
 #include "data/FontCenter.h"
@@ -26,6 +28,12 @@ void UI::update()
 void UI::draw()
 {
 }
+void UI::updateStartScreen()
+{
+    for (auto& [key, button] : button_map) {
+        button->update();
+    }
+}
 void UI::drawStartScreen()
 {
     DataCenter* DC = DataCenter::get_instance();
@@ -41,9 +49,6 @@ void UI::drawStartScreen()
     const char* title_text = "TETRIS GAME";
     int title_width = al_get_text_width(title_font, title_text);
     al_draw_text(title_font, al_map_rgb(255, 255, 255),
-        DC->window_width / 2, 100,
+        DC->window_width / 2.0, 100,
         ALLEGRO_ALIGN_CENTRE, title_text);
-    al_draw_text(FC->courier_new[FontSize::MEDIUM], al_map_rgb(200, 200, 200),
-        DC->window_width / 2, 200,
-        ALLEGRO_ALIGN_CENTRE, "Press ENTER to Start");
 }

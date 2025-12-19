@@ -25,12 +25,12 @@ public:
 public:
     Board();
     void init();
-    void update();
+    bool update();
     void draw();
 
     // Game Logic
     bool checkCollision(Tetris::TetriminoType type, int rotation, int x, int y);
-    void lockPiece(const Tetrimino& t);
+    bool lockPiece(const Tetrimino& t);
 
     // Getters for Tetrimino ghost calculations
     bool isOccupied(int x, int y) const;
@@ -47,6 +47,7 @@ public:
     void drawDecorations();
 
     void addGarbageLines(size_t count);
+    bool gameOver() const;
 
 private:
     // The main grid: 0 = empty, 1-7 = colors/types
@@ -61,7 +62,7 @@ private:
     int gravityTimer;
     int gravitySpeed; // Frames per drop (lower is faster)
 
-    void spawnPiece();
+    bool spawnPiece();
     size_t clearLines();
     bool isPerfectClear();
     void generate7Bag(); // Fills nextQueue

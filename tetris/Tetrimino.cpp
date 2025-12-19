@@ -20,7 +20,7 @@ Tetrimino::Tetrimino(TetriminoType t)
     // Adjust Y if you want it to spawn hidden above the board
 }
 
-void Tetrimino::update(Board& board)
+bool Tetrimino::update(Board& board)
 {
     DataCenter* DC = DataCenter::get_instance();
 
@@ -77,6 +77,9 @@ void Tetrimino::update(Board& board)
     // --- Hard Drop ---
     if (DC->key_state[ALLEGRO_KEY_SPACE] && !DC->prev_key_state[ALLEGRO_KEY_SPACE]) {
         hardDrop();
+        if (!DC->board->lockPiece(*this)) {
+            return false;
+        }
     }
     DC->board->updateGravityTimer(rotated, moved);
     if (rotated) {
@@ -84,7 +87,7 @@ void Tetrimino::update(Board& board)
         TSpin = isTSpin();
         // debug_log("T-Spin: %d, All-Spin: %d\n", TSpin, AllSpin);
     }
-    DC->board->updateGravityTimer(rotated);
+    return true;
 }
 
 bool Tetrimino::tryMove(int dx, int dy)
@@ -172,10 +175,8 @@ bool Tetrimino::isAllSpin()
 
 void Tetrimino::hardDrop()
 {
-    DataCenter* DC = DataCenter::get_instance();
     while (tryMove(0, 1))
         ;
-    DC->board->lockPiece(*this);
 }
 
 bool Tetrimino::collision(int testX, int testY)
