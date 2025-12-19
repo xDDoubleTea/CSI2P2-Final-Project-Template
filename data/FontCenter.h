@@ -7,7 +7,7 @@
 
 // fixed settings
 namespace FontSize {
-static constexpr int SMALL = 12, MEDIUM = 24, LARGE = 36, TITLE = 72;
+static constexpr int SMALL = 12, MEDIUM = 24, LARGE = 36, TITLE = 108;
 static constexpr std::array<int, 4> list({ FontSize::SMALL, FontSize::MEDIUM, FontSize::LARGE, FontSize::TITLE });
 };
 

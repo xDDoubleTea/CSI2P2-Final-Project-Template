@@ -67,8 +67,10 @@ void PeaShooter::draw()
             y1, x2 - x1, y2 - y1, 0);
     } else if (state == STATE::SHOOTING) {
         ALLEGRO_BITMAP* frame = algif_get_bitmap(shoot_animation, al_get_time());
-        if (frame == NULL)
+        if (frame == NULL) {
+            state = STATE::IDLE;
             return;
+        }
         al_draw_scaled_bitmap(frame, 0, 0, al_get_bitmap_width(frame), al_get_bitmap_height(frame), x1,
             y1, x2 - x1, y2 - y1, 0);
     }
