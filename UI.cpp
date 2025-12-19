@@ -38,17 +38,12 @@ void UI::drawStartScreen()
 {
     DataCenter* DC = DataCenter::get_instance();
     FontCenter* FC = FontCenter::get_instance();
-    ImageCenter* IC = ImageCenter::get_instance();
-
-    // Draw background
-    ALLEGRO_COLOR bg_color = al_map_rgb(20, 20, 20);
-    al_clear_to_color(bg_color);
 
     // Draw title
-    ALLEGRO_FONT* title_font = FC->courier_new[FontSize::LARGE];
-    const char* title_text = "TETRIS GAME";
-    int title_width = al_get_text_width(title_font, title_text);
-    al_draw_text(title_font, al_map_rgb(255, 255, 255),
+    ALLEGRO_FONT* title_font = FC->hun2[FontSize::TITLE];
+    const char* title_text = "PVZ & Tetris!!!";
+
+    al_draw_text(title_font, al_map_rgb(0, 255, 255),
         DC->window_width / 2.0, 100,
         ALLEGRO_ALIGN_CENTRE, title_text);
 }

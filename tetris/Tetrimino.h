@@ -34,7 +34,7 @@ public:
     bool tryMove(int dx, int dy);
     bool tryDryMove(int dx, int dy);
     bool collision(int testX, int testY);
-    size_t damageDealt(size_t linesCleared, bool isPerfectClear, bool isB2B, bool isTSpin, bool isAllSpin) const;
+    size_t damageDealt(size_t linesCleared, bool isPerfectClear, bool isB2B, bool isTSpin, bool isAllSpin, size_t combo) const;
     bool isAllSpin();
     bool isTSpin();
     bool AllSpin;
@@ -57,6 +57,7 @@ private:
     static constexpr int ARR_DELAY = 0; // Frames between auto-repeats
     static constexpr int LOCK_DELAY = 60; // Frames before locking
 
+    void playMovingSound(TetriminoType type);
     // Helpers
     enum Direction { LEFT = -1,
         RIGHT = 1 };

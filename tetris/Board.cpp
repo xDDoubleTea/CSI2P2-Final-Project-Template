@@ -1,8 +1,13 @@
 #include "Board.h"
 #include "../Utils.h"
 #include "../data/DataCenter.h"
+#include "../data/FontCenter.h"
+#include "../data/SoundCenter.h"
 #include "Tetrimino.h"
+#include "TetriminoDefinitions.h"
 #include <algorithm>
+#include <allegro5/allegro_font.h>
+#include <allegro5/bitmap_draw.h>
 #include <random>
 
 using namespace Tetris;
@@ -30,6 +35,8 @@ void Board::init()
     holdPiece = nullptr;
     debug_log("Trying to spawn initial piece...\n");
     spawnPiece();
+    garbageQueue = 0;
+    background = al_load_bitmap("assets/background/pvz_playfield.png");
     // Test Garbage
     // garbageQueue = 5;
 }
@@ -102,6 +109,14 @@ bool Board::checkCollision(TetriminoType type, int rotation, int x, int y)
     return false;
 }
 
+void Board::sendAttack(size_t damage)
+{
+    DataCenter* DC = DataCenter::get_instance();
+    if (damage > 0) {
+        DC->add_pea(new Pea(damage));
+        DC->peaShooter->set_state_shooting();
+    }
+}
 bool Board::lockPiece(const Tetrimino& t)
 {
     int typeIdx = static_cast<int>(t.getType());
@@ -120,16 +135,18 @@ bool Board::lockPiece(const Tetrimino& t)
 
     size_t linesCleared = clearLines();
     DataCenter* DC = DataCenter::get_instance();
-    DC->stat->updatePieceStat(linesCleared, activePiece->TSpin, isPerfectClear(), (linesCleared == 4 || activePiece->AllSpin || activePiece->TSpin), activePiece->AllSpin);
+    DC->stat->updatePieceStat(linesCleared, activePiece->isTSpin(), isPerfectClear(), (linesCleared == 4 || activePiece->TSpin || activePiece->AllSpin), activePiece->isAllSpin());
     DC->stat->increasePiecesPlaced();
-    size_t damage = t.damageDealt(linesCleared, isPerfectClear(), (linesCleared == 4 || activePiece->AllSpin || activePiece->TSpin), activePiece->TSpin, activePiece->AllSpin);
+    size_t damage = t.damageDealt(linesCleared, isPerfectClear(), DC->stat->getBackToBackCount(), activePiece->TSpin, activePiece->AllSpin, DC->stat->getComboCount());
     // debug_log("Damage dealt: %zu\n", damage);
+
+    sendAttack(damage);
     DC->stat->increaseAttacksSent(damage);
     garbageQueue -= std::min(garbageQueue, damage);
 
     if (garbageQueue > 0) {
         addGarbageLines(std::min(garbageQueue, (size_t)8));
-        debug_log("Added garbage lines from queue. Remaining garbage: %zu\n", garbageQueue);
+        // debug_log("Added garbage lines from queue. Remaining garbage: %zu\n", garbageQueue);
     }
 
     delete activePiece;
@@ -220,6 +237,7 @@ bool Board::spawnPiece()
 
 void Board::draw()
 {
+    drawDecorations();
     al_draw_rectangle(BOARD_OFFSET_X, BOARD_OFFSET_Y,
         BOARD_OFFSET_X + GRID_W * BLOCK_SIZE,
         BOARD_OFFSET_Y + GRID_H * BLOCK_SIZE,
@@ -256,6 +274,88 @@ void Board::draw()
         drawNextQueue(NEXT_QUEUE_COUNT);
     }
     drawGarbageQueue();
+    drawLineClearTypes();
+}
+
+void Board::drawLineClearTypes()
+{
+    if (!drawLineClearTypes_enabled)
+        return;
+
+    if (lastClearedLines == 0)
+        return;
+
+    FontCenter* FC = FontCenter::get_instance();
+    DataCenter* DC = DataCenter::get_instance();
+    switch (lastClearedLines) {
+    case 1:
+        al_draw_textf(FC->courier_new[FontSize::LARGE], al_map_rgb(font_color.r, font_color.g, font_color.b),
+            BOARD_OFFSET_X - 30,
+            BOARD_OFFSET_Y + HOLD_PIECE_OFFSET_Y + BLOCK_SIZE * 4,
+            ALLEGRO_ALIGN_RIGHT,
+            "SINGLE");
+        break;
+    case 2:
+        al_draw_textf(FC->courier_new[FontSize::LARGE], al_map_rgb(font_color.r, font_color.g, font_color.b),
+            BOARD_OFFSET_X - 30,
+            BOARD_OFFSET_Y + HOLD_PIECE_OFFSET_Y + BLOCK_SIZE * 4,
+            ALLEGRO_ALIGN_RIGHT,
+            "DOUBLE");
+        break;
+    case 3:
+        al_draw_textf(FC->courier_new[FontSize::LARGE], al_map_rgb(font_color.r, font_color.g, font_color.b),
+            BOARD_OFFSET_X - 30,
+            BOARD_OFFSET_Y + HOLD_PIECE_OFFSET_Y + BLOCK_SIZE * 4,
+            ALLEGRO_ALIGN_RIGHT,
+            "TRIPLE");
+        break;
+    case 4:
+        al_draw_textf(FC->courier_new[FontSize::LARGE], al_map_rgb(font_color.r, font_color.g, font_color.b),
+            BOARD_OFFSET_X - 30,
+            BOARD_OFFSET_Y + HOLD_PIECE_OFFSET_Y + BLOCK_SIZE * 4,
+            ALLEGRO_ALIGN_RIGHT,
+            "TETRIS");
+        break;
+    }
+    std::string lastClearedTypeToString;
+    switch (lastClearedType) {
+    case TetriminoType::I:
+        lastClearedTypeToString = "I";
+        break;
+    case TetriminoType::J:
+        lastClearedTypeToString = "J";
+        break;
+    case TetriminoType::L:
+        lastClearedTypeToString = "L";
+        break;
+    case TetriminoType::O:
+        lastClearedTypeToString = "O";
+        break;
+    case TetriminoType::S:
+        lastClearedTypeToString = "S";
+        break;
+    case TetriminoType::T:
+        lastClearedTypeToString = "T";
+        break;
+    case TetriminoType::Z:
+        lastClearedTypeToString = "Z";
+        break;
+    }
+    ColorRGB lastclearedColor = tetrimino_colors[static_cast<int>(lastClearedType)];
+    if (lastClearWasSpin) {
+        al_draw_textf(FC->courier_new[FontSize::LARGE], al_map_rgb(lastclearedColor.r, lastclearedColor.g, lastclearedColor.b),
+            BOARD_OFFSET_X - 30,
+            BOARD_OFFSET_Y + HOLD_PIECE_OFFSET_Y + BLOCK_SIZE * 3,
+            ALLEGRO_ALIGN_RIGHT,
+            "%s-SPIN", lastClearedTypeToString.c_str());
+    }
+    if (lastClearWasB2B) {
+        al_draw_textf(FC->courier_new[FontSize::LARGE], al_map_rgb(255, 215, 0),
+            BOARD_OFFSET_X - 30,
+            BOARD_OFFSET_Y + HOLD_PIECE_OFFSET_Y + BLOCK_SIZE * 5,
+            ALLEGRO_ALIGN_RIGHT,
+            "B2B x%zu", DC->stat->getBackToBackCount());
+    }
 }
 
 void Board::drawNextQueue(int count)
@@ -323,6 +423,25 @@ bool Board::isOccupied(int x, int y) const
     return grid[y][x] != 0;
 }
 
+void Board::drawDecorations()
+{
+    DataCenter* DC = DataCenter::get_instance();
+    FontCenter* FC = FontCenter::get_instance();
+    al_draw_tinted_scaled_bitmap(background, al_map_rgb(100, 100, 100), 0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
+        0, 0,
+        DC->window_width, DC->window_height, 0);
+    al_draw_text(FC->courier_new[FontSize::LARGE], al_map_rgb(font_color.r, font_color.g, font_color.b),
+        BOARD_OFFSET_X - 100,
+        BOARD_OFFSET_Y,
+        ALLEGRO_ALIGN_CENTRE,
+        "HOLD");
+    al_draw_text(FC->courier_new[FontSize::LARGE], al_map_rgb(font_color.r, font_color.g, font_color.b),
+        NEXT_QUEUE_OFFSET_X + BLOCK_SIZE * 2,
+        NEXT_QUEUE_OFFSET_Y - 40,
+        ALLEGRO_ALIGN_CENTRE,
+        "NEXT");
+}
+
 void Board::generate7Bag()
 {
     std::vector<int> indices = { 0, 1, 2, 3, 4, 5, 6 };
@@ -339,4 +458,18 @@ void Board::generate7Bag()
     // }
 
     // debug_log("Generated 7-bag of Tetriminos.\n");
+}
+
+Board::~Board()
+{
+    if (activePiece)
+        delete activePiece;
+    if (holdPiece)
+        delete holdPiece;
+    while (!nextQueue.empty()) {
+        delete nextQueue.front();
+        nextQueue.pop();
+    }
+    if (background)
+        al_destroy_bitmap(background);
 }

@@ -24,6 +24,7 @@ public:
 
 public:
     Board();
+    ~Board();
     void init();
     bool update();
     void draw();
@@ -46,6 +47,21 @@ public:
     // Draw decorations
     void drawDecorations();
 
+    void drawLineClearTypes();
+    void toggleDrawLineClearTypes() { drawLineClearTypes_enabled = !drawLineClearTypes_enabled; }
+    void getLineClearTypeDrawEnabled(bool& out_enabled) const { out_enabled = drawLineClearTypes_enabled; }
+
+    void setLastLineClearInfo(TetriminoType type, size_t lines, bool isSpin, bool isB2B)
+    {
+        lastClearedType = type;
+        lastClearedLines = lines;
+        lastClearWasSpin = isSpin;
+        lastClearWasB2B = isB2B;
+    }
+
+    void sendAttack(size_t damage);
+
+    void receiveGarbage(size_t damage) { garbageQueue += damage; }
     void addGarbageLines(size_t count);
     bool gameOver() const;
 
@@ -70,6 +86,17 @@ private:
     // Garbage
     size_t garbageQueue = 0;
     Shape* hitbox;
+
+    bool drawLineClearTypes_enabled = false;
+
+    // Decorations
+    ALLEGRO_BITMAP* background;
+    TetriminoType lastClearedType;
+    size_t lastClearedLines;
+    bool lastClearWasSpin;
+    bool lastClearWasB2B;
+
+    ColorRGB font_color = { 123, 255, 100 };
 };
 }
 

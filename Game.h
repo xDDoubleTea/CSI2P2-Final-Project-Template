@@ -9,6 +9,7 @@
  * @brief Main class that runs the whole game.
  * @details All game procedures must be processed through this class.
  */
+
 class Game {
 public:
     void execute();
