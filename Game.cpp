@@ -159,6 +159,7 @@ void Game::game_init()
             debug_log("<Game> state: change to LEVEL\n");
             this->state = STATE::LEVEL;
         });
+
     if (board)
         delete board;
     debug_log("Initializing Board...\n");
@@ -170,6 +171,21 @@ void Game::game_init()
     // DC->add_pea(new Pea(5));
     DC->add_zombie(new Zombie());
     DC->peaShooter = new PeaShooter();
+
+    ARRButton = new Button(DC->window_width / 2.0 - 125, DC->window_height / 2.0 + 150, 250, 50, "ARR : 0");
+    DASButton = new Button(DC->window_width / 2.0 - 125, DC->window_height / 2.0 + 250, 250, 50, "DAS : 10");
+    ARRButton->setFont(FC->courier_new[FontSize::MEDIUM]);
+    DASButton->setFont(FC->courier_new[FontSize::MEDIUM]);
+    ARRButton->setOnClickCallback(
+        [this, DC]() {
+            DC->setARRDelay(DC->arrlist[(DC->getARRDelayIndex() + 1) % 4]);
+            ARRButton->setText("ARR : " + std::to_string(DC->getARRDelay()));
+        });
+    DASButton->setOnClickCallback(
+        [this, DC]() {
+            DC->setDASDelay(DC->daslist[(DC->getDASDelayIndex() + 1) % 4]);
+            DASButton->setText("DAS : " + std::to_string(DC->getDASDelay()));
+        });
 
     // game start
     background = IC->get(background_img_path);
@@ -219,7 +235,14 @@ bool Game::game_update()
             startButton->update();
         else
             GAME_ASSERT(false, "Start Button is not initialized.");
-
+        if (DASButton)
+            DASButton->update();
+        else
+            GAME_ASSERT(false, "DAS Button is not initialized.");
+        if (ARRButton)
+            ARRButton->update();
+        else
+            GAME_ASSERT(false, "ARR Button is not initialized.");
         break;
     }
     case STATE::LEVEL: {
@@ -332,6 +355,8 @@ void Game::game_draw()
         al_draw_bitmap(background, 0, 0, 0);
         ui->drawStartScreen();
         startButton->draw();
+        ARRButton->draw();
+        DASButton->draw();
     }
     case STATE::LEVEL: {
         break;

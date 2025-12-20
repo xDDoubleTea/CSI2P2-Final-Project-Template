@@ -52,9 +52,7 @@ private:
     int arrTimer;
     int lockTimer; // Time before piece locks after touching ground
 
-    // Movement Settings (Constants)
-    static constexpr int DAS_DELAY = 10; // Frames before auto-repeat starts
-    static constexpr int ARR_DELAY = 0; // Frames between auto-repeats
+    // Movement Settings
     static constexpr int LOCK_DELAY = 60; // Frames before locking
 
     void playMovingSound(TetriminoType type);

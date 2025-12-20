@@ -49,6 +49,7 @@ private:
     Tetris::Board* board;
     Tetris::Stat* stat;
     Button* startButton;
+    Button *DASButton, *ARRButton;
 };
 
 #endif
